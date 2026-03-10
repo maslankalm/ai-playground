@@ -22,21 +22,10 @@ Combine these operators to refine your results and ensure you only find relevant
 *   **`-` (Minus/NOT):** Excludes unwanted terms (e.g., `DevOps -Senior` to find junior/mid roles).
 *   **`()` (Parentheses):** Groups logic (e.g., `("SRE" OR "DevOps") AND ("Remote" OR "Worldwide")`).
 
-### 4. Targeting Specific Markets
-To find remote roles in specific regions, use **country-specific domain codes**.
-*   **United Kingdom:** `site:*.uk/careers "remote" "DevOps"`
-*   **Italy:** `site:*.it/careers "Python Developer" remote`
-*   **Germany:** `site:*.de/jobs "SRE" remote`
-*   **Sweden:** `site:se.linkedin.com/jobs "business analyst" remote`
-
-### 5. Searching Global ATS Platforms
+### 4. Searching Global ATS Platforms
 Many international startups host jobs on third-party platforms. You can "X-Ray" these databases directly:
 *   **Greenhouse (US/Global):** `site:boards.greenhouse.io/* "DevOps" remote`
 *   **Ashby (UK/Global):** `site:jobs.ashbyhq.com/* "remote" "Senior"`
 *   **Notion (Startups/Web3):** `site:*.notion.site ("careers" OR "join us") "DevOps"`
 *   **Workable:** `site:apply.workable.com/* [position]`
 *   **Lever:** `site:jobs.eu.lever.co [position]`
-
-### 6. Pro-Tip: "Three Stars" Trick
-To capture varied phrasing in job titles, use triple wildcards.
-*   **Example:** `site:*.com/careers "specialist * * *"`
