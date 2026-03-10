@@ -6,10 +6,7 @@ from pathlib import Path
 import requests
 from litellm import completion
 
-DEFAULT_MODEL = "gpt-4o-mini"
-
-
-def generate_queries(job_description: str, model: str = DEFAULT_MODEL) -> list[dict]:
+def generate_queries(job_description: str, model: str = "gpt-4o-mini") -> list[dict]:
     """Use an LLM to generate Google X-Ray search queries for a job description."""
     xray_guide = Path(__file__).parent / "Google-X-Ray.md"
     system_context = xray_guide.read_text()
@@ -55,7 +52,13 @@ def generate_queries(job_description: str, model: str = DEFAULT_MODEL) -> list[d
     # Strip markdown code fences if present
     text = re.sub(r"^```(?:json)?\s*", "", text)
     text = re.sub(r"\s*```$", "", text)
-    return json.loads(text)
+
+    # Find the JSON array in the response (local models sometimes add extra text)
+    match = re.search(r"\[.*\]", text, re.DOTALL)
+    if not match:
+        raise RuntimeError("LLM did not return a valid JSON array. Try a different model.")
+
+    return json.loads(match.group())
 
 
 def _load_serper_keys() -> list[str]:

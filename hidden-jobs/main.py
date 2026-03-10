@@ -14,7 +14,8 @@ from xray import generate_queries, save_results, search_google
 
 def read_job_description(args) -> str:
     if args.file:
-        return open(args.file).read().strip()
+        with open(args.file) as f:
+            return f.read().strip()
     if args.text:
         return args.text.strip()
     if not sys.stdin.isatty():
