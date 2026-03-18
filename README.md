@@ -15,4 +15,4 @@ This is a deliberate methodology choice. Claude Code's capabilities — combined
 | Project | Description |
 |---------|-------------|
 | [hidden-jobs](hidden-jobs/) | CLI tool that uses LLM-generated Google X-Ray searches to find job postings hidden on company career pages and ATS platforms. Supports OpenAI, Anthropic, Google, and local models via Ollama. |
-| [k8s-oci-cluster](k8s-oci-cluster/) | Kubernetes cluster configuration for Oracle Cloud Infrastructure (OCI) Always Free tier — 2 ARM worker nodes running AI workloads. |
+| [k8s-oci-cluster](k8s-oci-cluster/) | Terraform-managed Kubernetes cluster on Oracle Cloud Infrastructure (OCI) Always Free tier — 2 ARM worker nodes for AI workloads. |
