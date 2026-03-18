@@ -33,6 +33,16 @@ Oracle Cloud's [Always Free tier](https://www.oracle.com/cloud/free/) is one of 
 
 ## Terraform Setup (macOS)
 
+### Pre-setup
+
+Create an OCI Object Storage bucket for Terraform remote state (versioning recommended):
+
+```bash
+oci os bucket create --name terraform-states --versioning Enabled --compartment-id <tenancy-ocid>
+```
+
+### Install
+
 Use the official HashiCorp tap to ensure you get the latest version directly from HashiCorp:
 
 ```bash
