@@ -34,14 +34,6 @@ oci iam region list
 
 ## Terraform Setup
 
-### Pre-setup
-
-Create an OCI Object Storage bucket for Terraform remote state (versioning recommended):
-
-```bash
-oci os bucket create --name terraform-states --versioning Enabled --compartment-id <tenancy-ocid>
-```
-
 ### Install
 
 Use the official HashiCorp tap to ensure you get the latest version directly from HashiCorp:
@@ -50,9 +42,15 @@ Use the official HashiCorp tap to ensure you get the latest version directly fro
 brew install hashicorp/tap/terraform
 ```
 
-### Terraform Backend
+### OCI Object Storage (Remote State)
 
-The S3-compatible backend in `versions.tf` uses a `namespace` value that is tenancy-specific. Look up yours with:
+Create a bucket for Terraform remote state (versioning recommended):
+
+```bash
+oci os bucket create --name terraform-states --versioning Enabled --compartment-id <tenancy-ocid>
+```
+
+The OCI backend in `versions.tf` uses a `namespace` value that is tenancy-specific. Look up yours with:
 
 ```bash
 oci os ns get --query data --raw-output
