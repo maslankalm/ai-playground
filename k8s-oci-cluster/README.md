@@ -8,9 +8,7 @@ Run AI workloads on a free Kubernetes cluster using Oracle Cloud Infrastructure'
 
 Oracle Cloud's [Always Free tier](https://www.oracle.com/cloud/free/) is one of the most generous cloud offers available for experimenting — especially for compute. The OKE (Oracle Kubernetes Engine) control plane is always free, and the Ampere A1 ARM shapes provide solid resources at no cost.
 
-## Based on
-
-Created from scratch based on [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s), while covering some documentation gaps found during development.
+Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s), rewritten with additional documentation and configuration changes.
 
 ## Cluster Setup
 
