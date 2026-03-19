@@ -57,3 +57,13 @@ oci os ns get --query data --raw-output
 ```
 
 Substitute the result into the `namespace` field in `versions.tf`.
+
+### Variables
+
+Create `terraform/terraform.tfvars` (gitignored) with your tenancy OCID as the compartment ID:
+
+```hcl
+compartment_id = "ocid1.tenancy.oc1..your-tenancy-ocid"
+```
+
+You can find your tenancy OCID in `~/.oci/config` (the `tenancy` field) or see `terraform.tfvars.example`.
