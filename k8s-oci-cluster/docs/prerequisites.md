@@ -60,10 +60,10 @@ Substitute the result into the `namespace` field in `versions.tf`.
 
 ### Variables
 
-Create `terraform/terraform.tfvars` (gitignored) with your tenancy OCID as the compartment ID:
+Create `terraform/terraform.tfvars` (gitignored) with the required variables. See `terraform.tfvars.example` for reference.
 
-```hcl
-compartment_id = "ocid1.tenancy.oc1..your-tenancy-ocid"
-```
-
-You can find your tenancy OCID in `~/.oci/config` (the `tenancy` field) or see `terraform.tfvars.example`.
+| Variable | Description |
+|---|---|
+| `compartment_id` | Tenancy OCID — find it in `~/.oci/config` (the `tenancy` field) |
+| `ssh_public_key` | SSH public key for worker node access |
+| `k8s_api_source_ip` | Your public IP in CIDR notation (e.g. `203.0.113.5/32`) to allow `kubectl` access to the API server |

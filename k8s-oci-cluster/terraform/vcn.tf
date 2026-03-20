@@ -4,9 +4,9 @@ module "vcn" {
 
   compartment_id = var.compartment_id
 
-  vcn_name     = "k8s-vcn"
+  vcn_name      = "k8s-vcn"
   vcn_dns_label = "k8svcn"
-  vcn_cidrs    = ["10.0.0.0/16"]
+  vcn_cidrs     = ["10.0.0.0/16"]
 
   create_internet_gateway = true
   create_nat_gateway      = true

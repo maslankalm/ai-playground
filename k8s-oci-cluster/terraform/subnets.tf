@@ -14,6 +14,22 @@ resource "oci_core_security_list" "internal" {
   }
 }
 
+resource "oci_core_security_list" "external" {
+  compartment_id = var.compartment_id
+  vcn_id         = module.vcn.vcn_id
+  display_name   = "external-security-list"
+
+  ingress_security_rules {
+    source   = var.k8s_api_source_ip
+    protocol = "6" # TCP
+
+    tcp_options {
+      min = 6443
+      max = 6443
+    }
+  }
+}
+
 resource "oci_core_subnet" "private" {
   compartment_id             = var.compartment_id
   vcn_id                     = module.vcn.vcn_id
@@ -32,5 +48,5 @@ resource "oci_core_subnet" "public" {
   cidr_block        = "10.0.0.0/24"
   dns_label         = "k8spub"
   route_table_id    = module.vcn.ig_route_id
-  security_list_ids = [oci_core_security_list.internal.id]
+  security_list_ids = [oci_core_security_list.internal.id, oci_core_security_list.external.id]
 }

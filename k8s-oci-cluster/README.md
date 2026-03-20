@@ -17,3 +17,20 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 - **Shape:** VM.Standard.A1.Flex (ARM Ampere A1, from the Always Free allocation of 4 OCPUs / 24 GB RAM)
 
 See [Prerequisites](docs/prerequisites.md) before running Terraform.
+
+## Usage
+
+Deploy the cluster:
+
+```bash
+cd terraform
+terraform init
+terraform apply
+```
+
+`terraform apply` creates a kubeconfig file at `~/.kube/k8s-oci-cluster-config`. Use it to interact with the cluster:
+
+```bash
+export KUBECONFIG=~/.kube/k8s-oci-cluster-config
+kubectl get nodes
+```
