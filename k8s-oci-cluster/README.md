@@ -34,3 +34,12 @@ terraform apply
 export KUBECONFIG=~/.kube/k8s-oci-cluster-config
 kubectl get nodes
 ```
+
+> [!TIP]
+> **A1 capacity availability** — Free-tier A1 instances share a limited capacity pool and `terraform apply` may fail with an "Out of capacity" error. If this happens repeatedly, consider upgrading your account to **Pay As You Go (PAYG)**. PAYG moves you into the regular capacity pool, which is far less congested. Your Always Free limits (4 OCPUs / 24 GB RAM) still apply, so you won't be charged as long as you stay within them.
+
+## Teardown
+
+```bash
+terraform destroy
+```

@@ -78,9 +78,8 @@ OLLAMA_API_BASE=http://192.168.1.100:11434
 3. Each query is executed via Serper.dev (Google Search API) with automatic key rotation
 4. Results are saved as individual markdown files grouped by query category
 
-## Tip: Reviewing Results with Obsidian
-
-[Obsidian](https://obsidian.md/) is a great tool for browsing the generated markdown files — just open the `results/` directory as a vault. You get clickable links, search across all runs, and a clean reading experience.
+> [!TIP]
+> **Reviewing results with Obsidian** — [Obsidian](https://obsidian.md/) is a great tool for browsing the generated markdown files — just open the `results/` directory as a vault. You get clickable links, search across all runs, and a clean reading experience.
 
 ![Results viewed in Obsidian](obsidian.png)
 
