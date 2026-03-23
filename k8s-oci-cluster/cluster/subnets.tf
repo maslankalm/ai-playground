@@ -12,6 +12,11 @@ resource "oci_core_security_list" "internal" {
     source   = "10.0.0.0/16"
     protocol = "all"
   }
+
+  # OCI cloud controller dynamically adds LB/NodePort rules — let it manage them
+  lifecycle {
+    ignore_changes = [ingress_security_rules, egress_security_rules]
+  }
 }
 
 resource "oci_core_security_list" "external" {
