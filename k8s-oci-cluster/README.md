@@ -13,10 +13,11 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 ## Cluster Setup
 
 - **Engine:** Oracle Kubernetes Engine (OKE) — free managed control plane
-- **Worker nodes:** 2 nodes, each with 2 vCPU / 12 GB RAM
+- **Worker nodes:** 2 nodes, each with 2 OCPUs (4 vCPUs) / 12 GB RAM / 100 GB block storage (NVMe SSD)
 - **Shape:** VM.Standard.A1.Flex (ARM Ampere A1, from the Always Free allocation of 4 OCPUs / 24 GB RAM)
-- **Ingress:** nginx ingress controller with an OCI free-tier load balancer
-- **TLS:** cert-manager with Let's Encrypt certificates via Cloudflare DNS-01 challenge
+- **Ingress:** nginx ingress controller with an OCI free-tier load balancer (Cloudflare-only source IPs)
+- **DNS:** external-dns with Cloudflare provider for automatic DNS record management (proxied mode)
+- **TLS:** cert-manager with Let's Encrypt certificates via Cloudflare DNS-01 challenge — enables Cloudflare Full (Strict) TLS mode for end-to-end encryption
 - **GitOps:** Argo CD for continuous deployment from Git
 
 See [Prerequisites](docs/prerequisites.md) before running Terraform.
@@ -27,6 +28,8 @@ See [Prerequisites](docs/prerequisites.md) before running Terraform.
 
 ```bash
 cd cluster
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your compartment_id, ssh_public_key, and k8s_api_source_ip
 terraform init
 terraform apply
 ```
@@ -51,7 +54,7 @@ kubectl get nodes
 
 ### 2. Bootstrap platform services
 
-Deploys the nginx ingress controller (with an OCI free-tier load balancer), cert-manager for automatic TLS certificates, and Argo CD:
+Deploys the nginx ingress controller (with an OCI free-tier load balancer), external-dns for automatic Cloudflare DNS management, cert-manager for automatic TLS certificates, and Argo CD:
 
 ```bash
 cd bootstrap
@@ -64,6 +67,15 @@ terraform apply
 
 > [!NOTE]
 > The first apply requires `-target=helm_release.cert_manager` because Terraform validates custom resources (like `ClusterIssuer`) against the cluster's CRDs at plan time. Once cert-manager is installed, subsequent applies work normally.
+
+### 3. Deploy applications via GitOps
+
+The `argocd/` directory will contain Argo CD application manifests that drive GitOps deployment of all remaining workloads. Once Argo CD is configured with this repository, it will automatically sync applications to the cluster.
+
+```bash
+# Applications are managed by Argo CD — no manual kubectl/terraform needed
+# Add manifests to argocd/ and push to Git
+```
 
 ## Teardown
 
