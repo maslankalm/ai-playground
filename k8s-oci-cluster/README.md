@@ -15,15 +15,17 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 - **Engine:** Oracle Kubernetes Engine (OKE) — free managed control plane
 - **Worker nodes:** 2 nodes, each with 2 vCPU / 12 GB RAM
 - **Shape:** VM.Standard.A1.Flex (ARM Ampere A1, from the Always Free allocation of 4 OCPUs / 24 GB RAM)
+- **Ingress:** nginx ingress controller with an OCI free-tier load balancer
+- **GitOps:** Argo CD for continuous deployment from Git
 
 See [Prerequisites](docs/prerequisites.md) before running Terraform.
 
 ## Usage
 
-Deploy the cluster:
+### 1. Deploy the cluster
 
 ```bash
-cd terraform
+cd cluster
 terraform init
 terraform apply
 ```
@@ -39,12 +41,28 @@ kubectl get nodes
 > **A1 capacity availability** — Free-tier A1 instances share a limited capacity pool and `terraform apply` may fail with an "Out of capacity" error. If this happens repeatedly, consider upgrading your account to **Pay As You Go (PAYG)**. PAYG moves you into the regular capacity pool, which is far less congested. Your Always Free limits (4 OCPUs / 24 GB RAM) still apply, so you won't be charged as long as you stay within them.
 
 > [!TIP]
+> **Extending worker node drives** — OCI worker nodes don't use the full boot volume by default. To expand the filesystem, SSH into each node and run `/usr/libexec/oci-growfs -y`.
+
+> [!TIP]
 > **Managing the cluster with Lens** — [Lens](https://k8slens.dev/) is a Kubernetes IDE that makes it easy to monitor and manage your cluster. It has a free personal tier and gives you a real-time view of workloads, logs, and events in a clean desktop UI.
 
 ![Cluster viewed in Lens](k8s-oci-cluster-lens.png)
 
-## Teardown
+### 2. Bootstrap platform services
+
+Deploys the nginx ingress controller (with an OCI free-tier load balancer) and Argo CD:
 
 ```bash
-terraform destroy
+cd bootstrap
+terraform init
+terraform apply
+```
+
+## Teardown
+
+Tear down in reverse order:
+
+```bash
+cd bootstrap && terraform destroy
+cd cluster && terraform destroy
 ```
