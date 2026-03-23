@@ -1,0 +1,11 @@
+# ── Required ──────────────────────────────────────────────────────────
+
+domain = "example.com"
+
+# Defaults to Cloudflare IPv4 ranges (see variables.tf). Override to add
+# an operator IP for direct access or to use a different set of ranges.
+# ingress_source_cidrs = ["203.0.113.5/32"]
+
+# ── Optional ──────────────────────────────────────────────────────────
+
+# kubeconfig_path = "~/.kube/k8s-oci-cluster-config"   # defaults to this
