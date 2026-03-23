@@ -16,6 +16,7 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 - **Worker nodes:** 2 nodes, each with 2 vCPU / 12 GB RAM
 - **Shape:** VM.Standard.A1.Flex (ARM Ampere A1, from the Always Free allocation of 4 OCPUs / 24 GB RAM)
 - **Ingress:** nginx ingress controller with an OCI free-tier load balancer
+- **TLS:** cert-manager with Let's Encrypt certificates via Cloudflare DNS-01 challenge
 - **GitOps:** Argo CD for continuous deployment from Git
 
 See [Prerequisites](docs/prerequisites.md) before running Terraform.
@@ -50,13 +51,19 @@ kubectl get nodes
 
 ### 2. Bootstrap platform services
 
-Deploys the nginx ingress controller (with an OCI free-tier load balancer) and Argo CD:
+Deploys the nginx ingress controller (with an OCI free-tier load balancer), cert-manager for automatic TLS certificates, and Argo CD:
 
 ```bash
 cd bootstrap
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your domain, email, and Cloudflare API token
 terraform init
+terraform apply -target=helm_release.cert_manager  # first time only, installs CRDs
 terraform apply
 ```
+
+> [!NOTE]
+> The first apply requires `-target=helm_release.cert_manager` because Terraform validates custom resources (like `ClusterIssuer`) against the cluster's CRDs at plan time. Once cert-manager is installed, subsequent applies work normally.
 
 ## Teardown
 

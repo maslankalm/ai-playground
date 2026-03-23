@@ -9,6 +9,17 @@ variable "domain" {
   type        = string
 }
 
+variable "letsencrypt_email" {
+  description = "Email address for Let's Encrypt registration"
+  type        = string
+}
+
+variable "cloudflare_api_token" {
+  description = "Cloudflare API token with Zone:DNS:Edit permission"
+  type        = string
+  sensitive   = true
+}
+
 variable "ingress_source_cidrs" {
   description = "CIDRs allowed to reach the ingress load balancer"
   type        = list(string)

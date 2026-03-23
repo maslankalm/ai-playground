@@ -6,7 +6,7 @@ resource "helm_release" "argocd" {
   namespace        = "argocd"
   create_namespace = true
 
-  depends_on = [helm_release.ingress_nginx]
+  depends_on = [helm_release.ingress_nginx, kubernetes_manifest.letsencrypt_issuer]
 
   set = [
     {
@@ -20,6 +20,18 @@ resource "helm_release" "argocd" {
     {
       name  = "server.ingress.hostname"
       value = "argocd-k8s.${var.domain}"
+    },
+    {
+      name  = "server.ingress.tls"
+      value = "true"
+    },
+    {
+      name  = "server.ingress.annotations.cert-manager\\.io/cluster-issuer"
+      value = "letsencrypt-prod"
+    },
+    {
+      name  = "configs.params.server\\.insecure"
+      value = "true"
     },
   ]
 }
