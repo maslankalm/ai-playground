@@ -6,12 +6,11 @@ resource "helm_release" "cert_manager" {
   namespace        = "cert-manager"
   create_namespace = true
 
-  set = [
-    {
-      name  = "crds.enabled"
-      value = "true"
-    },
-  ]
+  values = [yamlencode({
+    crds = {
+      enabled = true
+    }
+  })]
 }
 
 resource "kubernetes_secret_v1" "cloudflare_api_token" {
@@ -57,5 +56,5 @@ resource "kubernetes_manifest" "letsencrypt_issuer" {
     }
   }
 
-  depends_on = [helm_release.cert_manager, kubernetes_secret_v1.cloudflare_api_token]
+  depends_on = [helm_release.cert_manager]
 }

@@ -70,7 +70,7 @@ terraform apply
 
 ### 3. Deploy applications via GitOps
 
-The `argocd/` directory will contain Argo CD application manifests that drive GitOps deployment of all remaining workloads. Once Argo CD is configured with this repository, it will automatically sync applications to the cluster.
+ArgoCD watches the `argocd/` directory and automatically syncs applications to the cluster. Add Application manifests there and push to Git — ArgoCD picks them up, applies them, and prunes removed resources.
 
 ```bash
 # Applications are managed by Argo CD — no manual kubectl/terraform needed

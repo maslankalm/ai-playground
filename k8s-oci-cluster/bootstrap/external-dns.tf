@@ -25,42 +25,23 @@ resource "helm_release" "external_dns" {
 
   depends_on = [helm_release.ingress_nginx, kubernetes_secret_v1.cloudflare_api_token_external_dns]
 
-  set = [
-    {
-      name  = "provider.name"
-      value = "cloudflare"
-    },
-    {
-      name  = "env[0].name"
-      value = "CF_API_TOKEN"
-    },
-    {
-      name  = "env[0].valueFrom.secretKeyRef.name"
-      value = "cloudflare-api-token"
-    },
-    {
-      name  = "env[0].valueFrom.secretKeyRef.key"
-      value = "api-token"
-    },
-    {
-      name  = "domainFilters[0]"
-      value = var.domain
-    },
-    {
-      name  = "txtOwnerId"
-      value = "k8s-oci-cluster"
-    },
-    {
-      name  = "policy"
-      value = "sync"
-    },
-    {
-      name  = "sources[0]"
-      value = "ingress"
-    },
-    {
-      name  = "extraArgs[0]"
-      value = "--cloudflare-proxied"
-    },
-  ]
+  values = [yamlencode({
+    provider = {
+      name = "cloudflare"
+    }
+    env = [{
+      name = "CF_API_TOKEN"
+      valueFrom = {
+        secretKeyRef = {
+          name = "cloudflare-api-token"
+          key  = "api-token"
+        }
+      }
+    }]
+    domainFilters = [var.domain]
+    txtOwnerId    = "k8s-oci-cluster"
+    policy        = "sync"
+    sources       = ["ingress"]
+    extraArgs     = ["--cloudflare-proxied"]
+  })]
 }
