@@ -41,7 +41,7 @@ resource "kubernetes_manifest" "argocd_apps" {
       source = {
         repoURL        = var.git_repo_url
         targetRevision = "main"
-        path           = "k8s-oci-cluster/argocd"
+        path           = "k8s-oci-cluster/apps"
       }
       destination = {
         server    = "https://kubernetes.default.svc"

@@ -11,6 +11,6 @@ terraform {
   backend "oci" {
     namespace = "frcpdkrgafyo"
     bucket    = "terraform-states"
-    key       = "k8s-oci-cluster/terraform.tfstate"
+    key       = "k8s-oci-cluster/infrastructure.tfstate"
   }
 }

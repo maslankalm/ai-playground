@@ -2,7 +2,8 @@
 
 domain               = "example.com"
 letsencrypt_email    = "you@example.com"
-cloudflare_api_token = "your-cloudflare-api-token-here"
+cloudflare_api_token    = "your-cloudflare-api-token-here"
+grafana_admin_password  = "your-grafana-admin-password"
 
 # Defaults to Cloudflare IPv4 ranges (see variables.tf). Override to add
 # an operator IP for direct access or to use a different set of ranges.

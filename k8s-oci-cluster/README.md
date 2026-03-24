@@ -24,10 +24,10 @@ See [Prerequisites](docs/prerequisites.md) before running Terraform.
 
 ## Usage
 
-### 1. Deploy the cluster
+### 1. Deploy the infrastructure
 
 ```bash
-cd cluster
+cd infrastructure
 cp terraform.tfvars.example terraform.tfvars
 # Edit terraform.tfvars with your compartment_id, ssh_public_key, and k8s_api_source_ip
 terraform init
@@ -52,14 +52,14 @@ kubectl get nodes
 
 ![Cluster viewed in Lens](k8s-oci-cluster-lens.png)
 
-### 2. Bootstrap platform services
+### 2. Deploy platform services
 
 Deploys the nginx ingress controller (with an OCI free-tier load balancer), external-dns for automatic Cloudflare DNS management, cert-manager for automatic TLS certificates, and Argo CD:
 
 ```bash
-cd bootstrap
+cd platform
 cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars with your domain, email, and Cloudflare API token
+# Edit terraform.tfvars with your domain, email, Cloudflare API token, and Grafana admin password
 terraform init
 terraform apply -target=helm_release.cert_manager  # first time only, installs CRDs
 terraform apply
@@ -70,18 +70,9 @@ terraform apply
 
 ### 3. Deploy applications via GitOps
 
-ArgoCD watches the `argocd/` directory and automatically syncs applications to the cluster. Add Application manifests there and push to Git — ArgoCD picks them up, applies them, and prunes removed resources.
+ArgoCD watches the `apps/` directory and automatically syncs applications to the cluster. Add Application manifests there and push to Git — ArgoCD picks them up, applies them, and prunes removed resources.
 
 ```bash
 # Applications are managed by Argo CD — no manual kubectl/terraform needed
-# Add manifests to argocd/ and push to Git
-```
-
-## Teardown
-
-Tear down in reverse order:
-
-```bash
-cd bootstrap && terraform destroy
-cd cluster && terraform destroy
+# Add manifests to apps/ and push to Git
 ```
