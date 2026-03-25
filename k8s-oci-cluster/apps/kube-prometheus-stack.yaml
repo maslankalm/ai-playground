@@ -77,16 +77,6 @@ spec:
         kubeStateMetrics:
           enabled: true
 
-  ignoreDifferences:
-    - group: monitoring.coreos.com
-      kind: Prometheus
-      jsonPointers:
-        - /status
-    - group: monitoring.coreos.com
-      kind: Alertmanager
-      jsonPointers:
-        - /status
-
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -97,5 +87,3 @@ spec:
       prune: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
-      - RespectIgnoreDifferences=true
