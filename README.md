@@ -8,8 +8,6 @@ All code in this repository is authored by [Claude Code](https://docs.anthropic.
 
 There's a decade of hands-on engineering behind the wheel — AI just ships it faster.
 
-This is a deliberate methodology choice. Claude Code's capabilities — combined with [skills](https://docs.anthropic.com/en/docs/claude-code/skills), [MCP servers](https://docs.anthropic.com/en/docs/claude-code/mcp-servers) for web search, browser automation, and API integrations — make it possible to build production-quality tools with AI handling the implementation. The goal is to push the boundaries of what's achievable when AI handles the engineering and humans focus on the thinking and design.
-
 ## Projects
 
 | Project | Description |
