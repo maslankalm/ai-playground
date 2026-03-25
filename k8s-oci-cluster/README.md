@@ -42,13 +42,10 @@ kubectl get nodes
 ```
 
 > [!TIP]
-> **A1 capacity availability** — Free-tier A1 instances share a limited capacity pool and `terraform apply` may fail with an "Out of capacity" error. If this happens repeatedly, consider upgrading your account to **Pay As You Go (PAYG)**. PAYG moves you into the regular capacity pool, which is far less congested. Your Always Free limits (4 OCPUs / 24 GB RAM) still apply, so you won't be charged as long as you stay within them.
+> **A1 capacity availability** — Free-tier A1 instances share a limited capacity pool and `terraform apply` may fail with an "Out of capacity" error. Consider upgrading to **Pay As You Go (PAYG)** — it uses the regular capacity pool while Always Free limits still apply.
 
 > [!TIP]
-> **Extending worker node drives** — OCI worker nodes don't use the full boot volume by default. To expand the filesystem, run `/usr/libexec/oci-growfs -y` on each node (e.g. via a shell session in Lens, see below).
-
-> [!TIP]
-> **Managing the cluster with Lens** — [Lens](https://k8slens.dev/) is a Kubernetes IDE that makes it easy to monitor and manage your cluster. It has a free personal tier and gives you a real-time view of workloads, logs, and events in a clean desktop UI.
+> **Extending worker node drives** — OCI worker nodes don't use the full boot volume by default. Run `/usr/libexec/oci-growfs -y` on each node (e.g. via a shell session in [Lens](https://k8slens.dev/)).
 
 ![Cluster viewed in Lens](k8s-oci-cluster-lens.png)
 

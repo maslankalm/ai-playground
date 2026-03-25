@@ -1,80 +1,40 @@
 # Prerequisites (macOS)
 
-## OCI CLI Setup
-
-### Install
-
-Install the OCI CLI via Homebrew:
+## OCI CLI
 
 ```bash
 brew install oci-cli
+oci setup config          # generates key pair + writes ~/.oci/config
 ```
 
-### Configure
+Upload the generated public key (`~/.oci/oci_api_key_public.pem`) to OCI Console:
+**User Settings** → **Tokens and Keys** → **Add API Key**
 
-Run `oci setup config` — it will generate a key pair and write `~/.oci/config`.
+Verify: `oci iam region list`
 
-### Upload API Key
-
-The CLI won't work until you upload the generated public key to OCI Console:
-
-- Login to [cloud.oracle.com](https://cloud.oracle.com)
-- Top-right → click profile image → **User Settings**
-- Tab → **Tokens and Keys** → **Add API Key**
-- Paste the contents of `~/.oci/oci_api_key_public.pem`
-- Confirm the fingerprint shown by OCI matches the one in `~/.oci/config`
-
-### Verify
-
-Check that the CLI is configured correctly:
-
-```bash
-oci iam region list
-```
-
-## Terraform Setup
-
-### Install
-
-Use the official HashiCorp tap to ensure you get the latest version directly from HashiCorp:
+## Terraform
 
 ```bash
 brew install hashicorp/tap/terraform
 ```
 
-### OCI Object Storage (Remote State)
+### Remote State
 
-Create a bucket for Terraform remote state (versioning recommended):
+Create a bucket for Terraform remote state:
 
 ```bash
 oci os bucket create --name terraform-states --versioning Enabled --compartment-id <tenancy-ocid>
 ```
 
-The OCI backend in `versions.tf` uses a `namespace` value that is tenancy-specific. Look up yours with:
+Look up your tenancy namespace and substitute it into `_versions.tf` in both `infrastructure/` and `platform/`:
 
 ```bash
 oci os ns get --query data --raw-output
 ```
 
-Substitute the result into the `namespace` field in `versions.tf` — this must be updated in both `infrastructure/_versions.tf` and `platform/_versions.tf`.
-
 ### Variables
 
-Each Terraform directory has its own `terraform.tfvars` (gitignored). See the corresponding `terraform.tfvars.example` for reference.
-
-#### `infrastructure/terraform.tfvars`
-
-| Variable | Description |
-|---|---|
-| `compartment_id` | Tenancy OCID — find it in `~/.oci/config` (the `tenancy` field) |
-| `k8s_api_source_ip` | Your public IP in CIDR notation (e.g. `203.0.113.5/32`) to allow `kubectl` access to the API server |
-
-#### `platform/terraform.tfvars`
-
-| Variable | Description |
-|---|---|
-| `domain` | Domain name for ingress hostnames (e.g. `example.com`) |
-| `ingress_source_cidrs` | CIDRs allowed to reach the ingress LB (defaults to Cloudflare IPv4 ranges; override to add an operator IP) |
+Each Terraform directory has its own `terraform.tfvars` (gitignored). Copy `terraform.tfvars.example` and fill in the values.
 
 > [!NOTE]
-> The list of platform variables may vary depending on which applications are deployed and what secrets they require. Check `_variables.tf` for the current set.
+> The list of platform variables may grow as applications requiring secrets are added. Check `terraform.tfvars.example` for the current set.

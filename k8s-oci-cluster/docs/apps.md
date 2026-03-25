@@ -10,7 +10,6 @@ Full monitoring and observability stack.
 |---|---|
 | **Chart** | `kube-prometheus-stack` v72.* |
 | **Namespace** | `monitoring` |
-| **Sync** | Automated with self-heal and prune, server-side apply |
 
 ### Sub-components
 
