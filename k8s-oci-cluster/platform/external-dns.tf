@@ -33,7 +33,7 @@ resource "helm_release" "external_dns" {
       name = "CF_API_TOKEN"
       valueFrom = {
         secretKeyRef = {
-          name = "cloudflare-api-token"
+          name = kubernetes_secret_v1.cloudflare_api_token_external_dns.metadata[0].name
           key  = "api-token"
         }
       }
