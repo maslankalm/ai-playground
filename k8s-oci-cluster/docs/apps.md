@@ -18,3 +18,13 @@ Full monitoring and observability stack.
 - **Alertmanager** — alert routing and grouping, 2Gi persistent volume
 - **Node Exporter** — host-level metrics from each worker node
 - **Kube-State-Metrics** — Kubernetes object state metrics (deployments, pods, etc.)
+
+## Loki + Promtail
+
+Centralized log aggregation. Promtail (DaemonSet) collects container logs from each node and ships them to Loki. Queryable via the Loki datasource in Grafana.
+
+| Component | Details |
+|---|---|
+| **Loki chart** | `loki` v6.* (monolithic mode, filesystem storage) |
+| **Promtail chart** | `promtail` v6.* |
+| **Namespace** | `monitoring` |
