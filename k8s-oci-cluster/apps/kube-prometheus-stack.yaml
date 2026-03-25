@@ -1,0 +1,89 @@
+# Monitoring is not a foundational cluster component (unlike ingress, DNS, certs,
+# ArgoCD), so it's managed as an ArgoCD app rather than in Terraform platform layer.
+# The grafana-admin secret is pre-created by platform/secrets.tf.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 72.*
+    helm:
+      valuesObject:
+        grafana:
+          enabled: true
+          persistence:
+            enabled: true
+            size: 1Gi
+          admin:
+            existingSecret: grafana-admin
+            passwordKey: admin-password
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - grafana-k8s.maslanka.io
+            tls:
+              - secretName: grafana-tls
+                hosts:
+                  - grafana-k8s.maslanka.io
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-prod
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+
+        prometheus:
+          prometheusSpec:
+            retention: 15d
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 10Gi
+
+        alertmanager:
+          enabled: true
+          alertmanagerSpec:
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 2Gi
+
+        nodeExporter:
+          enabled: true
+
+        kubeStateMetrics:
+          enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
