@@ -13,7 +13,7 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 ## Cluster Setup
 
 - **Engine:** Oracle Kubernetes Engine (OKE) — free managed control plane
-- **Worker nodes:** 2 nodes, each with 2 OCPUs (4 vCPUs) / 12 GB RAM / 100 GB block storage (NVMe SSD)
+- **Worker nodes:** 2 nodes, each with 2 OCPUs / 12 GB RAM / 100 GB block storage (NVMe SSD)
 - **Shape:** VM.Standard.A1.Flex (ARM Ampere A1, from the Always Free allocation of 4 OCPUs / 24 GB RAM)
 - **Ingress:** nginx ingress controller with an OCI free-tier load balancer (Cloudflare-only source IPs)
 - **DNS:** external-dns with Cloudflare provider for automatic DNS record management (proxied mode)
@@ -29,7 +29,7 @@ See [Prerequisites](docs/prerequisites.md) before running Terraform.
 ```bash
 cd infrastructure
 cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars with your compartment_id, ssh_public_key, and k8s_api_source_ip
+# Edit terraform.tfvars with your compartment_id and k8s_api_source_ip
 terraform init
 terraform apply
 ```
@@ -45,7 +45,7 @@ kubectl get nodes
 > **A1 capacity availability** — Free-tier A1 instances share a limited capacity pool and `terraform apply` may fail with an "Out of capacity" error. If this happens repeatedly, consider upgrading your account to **Pay As You Go (PAYG)**. PAYG moves you into the regular capacity pool, which is far less congested. Your Always Free limits (4 OCPUs / 24 GB RAM) still apply, so you won't be charged as long as you stay within them.
 
 > [!TIP]
-> **Extending worker node drives** — OCI worker nodes don't use the full boot volume by default. To expand the filesystem, SSH into each node and run `/usr/libexec/oci-growfs -y`.
+> **Extending worker node drives** — OCI worker nodes don't use the full boot volume by default. To expand the filesystem, run `/usr/libexec/oci-growfs -y` on each node (e.g. via a shell session in Lens, see below).
 
 > [!TIP]
 > **Managing the cluster with Lens** — [Lens](https://k8slens.dev/) is a Kubernetes IDE that makes it easy to monitor and manage your cluster. It has a free personal tier and gives you a real-time view of workloads, logs, and events in a clean desktop UI.
@@ -54,12 +54,12 @@ kubectl get nodes
 
 ### 2. Deploy platform services
 
-Deploys the nginx ingress controller (with an OCI free-tier load balancer), external-dns for automatic Cloudflare DNS management, cert-manager for automatic TLS certificates, and Argo CD:
+Deploys the nginx ingress controller (with an OCI free-tier load balancer), external-dns for automatic Cloudflare DNS management, cert-manager for automatic TLS certificates, and Argo CD. See [Platform Components](docs/platform.md) for details.
 
 ```bash
 cd platform
 cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars with your domain, email, Cloudflare API token, and Grafana admin password
+# Edit terraform.tfvars with your domain, email, and all required secrets
 terraform init
 terraform apply -target=helm_release.cert_manager  # first time only, installs CRDs
 terraform apply
@@ -70,7 +70,10 @@ terraform apply
 
 ### 3. Deploy applications via GitOps
 
-ArgoCD watches the `apps/` directory and automatically syncs applications to the cluster. Add Application manifests there and push to Git — ArgoCD picks them up, applies them, and prunes removed resources.
+ArgoCD watches the `apps/` directory and automatically syncs applications to the cluster. Add Application manifests there and push to Git — ArgoCD picks them up, applies them, and prunes removed resources. See [Applications](docs/apps.md) for details.
+
+> [!NOTE]
+> If an application requires secrets, they are pre-created in the platform layer (`platform/secrets.tf`) via Terraform rather than in ArgoCD manifests, since the `apps/` directory is in a public repository.
 
 ```bash
 # Applications are managed by Argo CD — no manual kubectl/terraform needed

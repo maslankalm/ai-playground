@@ -56,23 +56,25 @@ The OCI backend in `versions.tf` uses a `namespace` value that is tenancy-specif
 oci os ns get --query data --raw-output
 ```
 
-Substitute the result into the `namespace` field in `versions.tf` — this must be updated in both `cluster/versions.tf` and `bootstrap/versions.tf`.
+Substitute the result into the `namespace` field in `versions.tf` — this must be updated in both `infrastructure/_versions.tf` and `platform/_versions.tf`.
 
 ### Variables
 
 Each Terraform directory has its own `terraform.tfvars` (gitignored). See the corresponding `terraform.tfvars.example` for reference.
 
-#### `cluster/terraform.tfvars`
+#### `infrastructure/terraform.tfvars`
 
 | Variable | Description |
 |---|---|
 | `compartment_id` | Tenancy OCID — find it in `~/.oci/config` (the `tenancy` field) |
-| `ssh_public_key` | SSH public key for worker node access |
 | `k8s_api_source_ip` | Your public IP in CIDR notation (e.g. `203.0.113.5/32`) to allow `kubectl` access to the API server |
 
-#### `bootstrap/terraform.tfvars`
+#### `platform/terraform.tfvars`
 
 | Variable | Description |
 |---|---|
 | `domain` | Domain name for ingress hostnames (e.g. `example.com`) |
 | `ingress_source_cidrs` | CIDRs allowed to reach the ingress LB (defaults to Cloudflare IPv4 ranges; override to add an operator IP) |
+
+> [!NOTE]
+> The list of platform variables may vary depending on which applications are deployed and what secrets they require. Check `_variables.tf` for the current set.

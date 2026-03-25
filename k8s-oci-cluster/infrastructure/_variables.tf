@@ -3,11 +3,6 @@ variable "compartment_id" {
   type        = string
 }
 
-variable "ssh_public_key" {
-  description = "SSH public key for worker node access"
-  type        = string
-}
-
 variable "k8s_api_source_ip" {
   description = "Public IP allowed to reach the K8s API (CIDR, e.g. 203.0.113.5/32)"
   type        = string

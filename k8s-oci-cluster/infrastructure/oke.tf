@@ -66,7 +66,6 @@ resource "oci_containerengine_node_pool" "workers" {
     }
   }
 
-  ssh_public_key = var.ssh_public_key
 }
 
 data "oci_containerengine_cluster_kube_config" "k8s" {
