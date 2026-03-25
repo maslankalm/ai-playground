@@ -11,6 +11,7 @@ resource "kubernetes_secret_v1" "grafana_admin" {
   }
 
   data = {
+    admin-user     = "admin"
     admin-password = var.grafana_admin_password
   }
 }
