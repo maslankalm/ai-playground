@@ -80,12 +80,12 @@ spec:
   ignoreDifferences:
     - group: monitoring.coreos.com
       kind: Prometheus
-      jqPathExpressions:
-        - .status
+      jsonPointers:
+        - /status
     - group: monitoring.coreos.com
       kind: Alertmanager
-      jqPathExpressions:
-        - .status
+      jsonPointers:
+        - /status
 
   destination:
     server: https://kubernetes.default.svc
@@ -98,3 +98,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - RespectIgnoreDifferences=true
