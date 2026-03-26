@@ -4,10 +4,10 @@ Core services deployed via Terraform (`platform/`). These provide the shared inf
 
 | Component | Chart | Version | Namespace |
 |---|---|---|---|
-| [NGINX Ingress](#nginx-ingress-controller) | `ingress-nginx` | 4.12.1 | `ingress-nginx` |
-| [Cert-Manager](#cert-manager) | `cert-manager` | 1.17.1 | `cert-manager` |
+| [NGINX Ingress](#nginx-ingress-controller) | `ingress-nginx` | 4.15.1 | `ingress-nginx` |
+| [Cert-Manager](#cert-manager) | `cert-manager` | 1.20.0 | `cert-manager` |
 | [External-DNS](#external-dns) | `external-dns` | 1.20.0 | `external-dns` |
-| [ArgoCD](#argocd) | `argo-cd` | 7.8.13 | `argocd` |
+| [ArgoCD](#argocd) | `argo-cd` | 9.4.15 | `argocd` |
 
 ## NGINX Ingress Controller
 
