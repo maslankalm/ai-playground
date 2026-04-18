@@ -18,8 +18,6 @@ graph LR
     REPO -->|ArgoCD GitOps| K8S
 ```
 
-Canonical diagram source lives in [`diagrams/architecture.md`](diagrams/architecture.md).
-
 ## Components
 
 | Component | Role | Link |
