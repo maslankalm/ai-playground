@@ -6,16 +6,25 @@ Kept cost-free where possible (free tiers, self-hosting, local models) so the fo
 
 ## Current state
 
-First step of the homelab is already in place: a Kubernetes cluster running on Oracle Cloud's Always Free tier, driven by Claude Code through GitOps.
+A Kubernetes cluster on Oracle Cloud drives GitOps workloads, and a dedicated HP node runs AI agents via OpenClaw.
 
 ```mermaid
 graph LR
     CC["Claude Code<br/><i>coding agent</i>"]
     REPO["ai-playground repo<br/><i>GitHub</i>"]
     K8S["OCI k8s cluster<br/><i>Oracle Always Free</i>"]
+    HP["HP Compaq Elite 8300<br/><i>Docker host</i>"]
+    OC["OpenClaw<br/><i>AI agent platform</i>"]
+    SX["SearXNG<br/><i>web search</i>"]
+    OPENAI["OpenAI Codex<br/><i>cloud model</i>"]
+    DISCORD["Discord<br/><i>chat interface</i>"]
 
     CC -->|commits / PRs| REPO
     REPO -->|ArgoCD GitOps| K8S
+    HP --> OC
+    OC --> SX
+    OC -->|OpenAI Codex subscription| OPENAI
+    OC -->|bot| DISCORD
 ```
 
 ## Components
@@ -24,6 +33,9 @@ graph LR
 |---|---|---|
 | Claude Code | Coding agent driving all changes in this repo | [docs](https://docs.anthropic.com/en/docs/claude-code/overview) |
 | OCI k8s cluster | Compute target for workloads, GitOps via ArgoCD | [`../k8s-oci-cluster/`](../k8s-oci-cluster/) |
+| HP Compaq Elite 8300 | Dedicated Docker host for AI agents and automation | — |
+| OpenClaw | AI agent platform, OpenAI Codex subscription | `http://localhost:18789` via SSH tunnel |
+| SearXNG | Local web search backend for OpenClaw | port `8080` on `hp` |
 
 ## Changelog
 
