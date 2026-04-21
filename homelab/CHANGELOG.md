@@ -12,6 +12,14 @@ Each entry is a dated `## YYYY-MM-DD` heading with a short title, followed by:
 
 ---
 
+## 2026-04-21 — opus-expert: Dockerized Claude advisory system on HP
+
+- **What** — Built and deployed `opus-expert` on the HP host — a Dockerized Claude Code wrapper with a CLI (`ask-opus`) and an internal REST API. Supports one-shot queries and named advisory sessions with full session continuity.
+- **Why** — OpenClaw got banned from the Claude subscription, so this is a workaround to keep using Claude on the homelab with the generous Claude subscription limits. Sessions are persistent and auditable, workloads stay local.
+- **Links** — Source: `~/workspace/opus-expert/` on `hp`, CLI: `ask-opus`, REST API on port `8081` (internal).
+
+---
+
 ## 2026-04-20 — HP homelab node running OpenClaw with OpenAI + Discord + SearXNG
 
 - **What** — Added an HP Compaq Elite 8300 USDT as a dedicated Docker host for AI agents and automation. Running OpenClaw (AI agent platform) backed by OpenAI Codex subscription, SearXNG as the web search engine, and Discord integration for chat. All services managed via plain Docker Compose under `~/.services/` on the host.
