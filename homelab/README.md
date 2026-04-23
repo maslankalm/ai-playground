@@ -6,7 +6,7 @@ Kept cost-free where possible (free tiers, self-hosting, local models) so the fo
 
 ## Current state
 
-A Kubernetes cluster on Oracle Cloud drives GitOps workloads, and a dedicated HP node runs two AI platforms side by side: OpenClaw (agent platform backed by OpenAI Codex with Ollama cloud delegates for narrow tasks) and `opus-expert` (Claude advisory system on the Claude subscription).
+A Kubernetes cluster on Oracle Cloud drives GitOps workloads. An HP node runs two AI platforms side by side — OpenClaw (agent platform on an OpenAI Codex subscription) and `opus-expert` (Claude advisory system on a Claude subscription). OpenClaw delegates narrow tasks to Ollama models, picked per lane after benchmarking: running either on Ollama's hosted cloud or on `rtx-i5`, a private GPU rig (i5-9400F / RTX 1080) that serves local inference on owned hardware.
 
 ```mermaid
 graph LR
@@ -14,11 +14,12 @@ graph LR
     REPO["ai-playground repo<br/><i>GitHub</i>"]
     K8S["OCI k8s cluster<br/><i>Oracle Always Free</i>"]
     HP["HP Compaq Elite 8300<br/><i>Docker host</i>"]
+    RTX["rtx-i5<br/><i>local Ollama on GPU</i>"]
     OC["OpenClaw<br/><i>AI agent platform</i>"]
     OE["opus-expert<br/><i>Claude advisory</i>"]
     SX["SearXNG<br/><i>web search</i>"]
-    OPENAI["OpenAI Codex<br/><i>cloud model</i>"]
-    OLLAMA["Ollama Cloud<br/><i>Qwen / Gemma / GLM</i>"]
+    OPENAI["OpenAI Codex<br/><i>subscription</i>"]
+    OLLAMA_CLOUD["Ollama Cloud<br/><i>per-lane delegates</i>"]
     CLAUDE["Claude<br/><i>subscription</i>"]
     DISCORD["Discord<br/><i>chat interface</i>"]
 
@@ -27,8 +28,10 @@ graph LR
     HP --> OC
     HP --> OE
     OC --> SX
-    OC -->|OpenAI Codex subscription| OPENAI
-    OC -->|qwen-coder / gemma-analyst / glm-engineer| OLLAMA
+    OC --> OPENAI
+    OC -->|cloud delegates| OLLAMA_CLOUD
+    OC -->|local inference| RTX
+    OC -->|advisor| OE
     OC -->|bot| DISCORD
     OE --> CLAUDE
 ```
@@ -42,8 +45,9 @@ graph LR
 | HP Compaq Elite 8300 | Dedicated Docker host for AI agents and automation | — |
 | OpenClaw | AI agent platform, OpenAI Codex subscription | — |
 | SearXNG | Local web search backend for OpenClaw | — |
-| Ollama cloud delegates | `qwen-coder` (Qwen3 Coder), `gemma-analyst` (Gemma 4 31B), `glm-engineer` (GLM 5.1) — narrow-task delegates for OpenClaw | [ollama.com](https://ollama.com/) |
-| opus-expert | Claude advisory system on HP, CLI (`ask-opus`) + internal REST API | — |
+| Ollama cloud delegates | Per-lane workers for OpenClaw — GLM 5.1 leads coding (MiniMax backup); DeepSeek / Gemma 4 31B / Kimi trio handles research | [ollama.com](https://ollama.com/) |
+| rtx-i5 | Private GPU inference rig (i5-9400F / 32 GB / RTX 1080), Ollama in Docker with GPU passthrough, LAN-only | — |
+| opus-expert | Claude advisory system on HP, CLI (`ask-opus`) + internal REST API; also consulted by OpenClaw as an expert advisor | — |
 
 ## Changelog
 
