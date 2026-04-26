@@ -14,6 +14,44 @@ Keep entries focused on *what changed* and *why*. Host-internal paths, ports, an
 
 ---
 
+## 2026-04-26
+
+### OpenClaw: GPT-5.5-only Leah with lean internal workers
+
+- **What** — Simplified the OpenClaw agent model so Leah is the only persistent user-facing agent, now backed by GPT-5.5 with a platform-wide "never below high" thinking policy. Specialist models remain available as internal workers rather than visible standalone agents: GLM 5.1 and MiniMax for coding, DeepSeek V4 Flash / Gemma / Kimi for research, plus GPT-5.5 workers and `opus-expert` for critique or escalation.
+- **Why** — Reduces operational confusion, avoids stale visible worker sessions, and keeps the Discord control plane centered on one primary operator while preserving delegated labor for real work.
+
+### Rigwarden: wake/status control for GPU rigs
+
+- **What** — Built and deployed Rigwarden on the HP host as a Dockerized Wake-on-LAN and lightweight status API for `rtx-i5`. Validated stop/start power-cycle behavior after enabling WoL on the rig, then narrowed Rigwarden's service boundary to wake/status only. The service is intended to move later to a Raspberry Pi colocated with the rigs.
+- **Why** — Keeps GPU rigs off by default to save electricity, while still allowing Leah/OpenClaw to bring local hardware online when a job actually needs it. The wake/status-only boundary also keeps the future Raspberry Pi controller small and low-risk.
+
+### Vidscribe: internal video transcript service on `rtx-i5`
+
+- **What** — Built and pushed Vidscribe as a Dockerized transcript artifact service. It accepts video URLs/IDs, prefers existing captions when available, writes structured transcript artifacts, and falls back to local faster-whisper STT on `rtx-i5` when captions are unavailable. Added HTTP artifact listing/download endpoints so other tools can consume transcripts through the API.
+- **Why** — Provides a reusable video-to-transcript utility without copying transcripts into random directories or depending on manual container file access.
+
+### Workspace and platform boundaries clarified
+
+- **What** — Split real development work from OpenClaw's operating workspace so repositories, services, and project scripts live separately from agent memory, channel policies, mission notes, docs, helper scripts, and lightweight scratch. Also documented a Docker-first development rule for HP, rigs, Raspberry Pis, and future nodes.
+- **Why** — Keeps code visible and manually operable, keeps OpenClaw's workspace focused on agent operations, and avoids unnecessary host OS mutation across the homelab.
+
+---
+
+## 2026-04-25
+
+### OpenClaw: GPT-5.5 workstream lanes and long-run task cleanup
+
+- **What** — Promoted GPT-5.5 as the main OpenClaw model, with GPT-5.4 retained only as fallback during the transition. Clarified Discord channel boundaries and retired the old "Overnight Research" procedure name in favor of simpler long-run task docs and reusable result artifacts.
+- **Why** — Makes OpenClaw easier to operate across separate chat lanes while keeping long-running work auditable and resumable.
+
+### GPU rig power-control plan
+
+- **What** — Documented the plan to keep GPU rigs off by default and wake them only when needed, with a Raspberry Pi planned as a future colocated controller. Current routing remains cloud-first for supported Ollama workloads, with local GPU used for workloads that specifically need local hardware.
+- **Why** — Reduces electricity usage while preserving access to local GPU capacity when it is useful.
+
+---
+
 ## 2026-04-23
 
 ### rtx-i5: first private inference rig on an old desktop
@@ -33,7 +71,7 @@ Keep entries focused on *what changed* and *why*. Host-internal paths, ports, an
 ### opus-expert: Claude advisory system on HP
 
 - **What** — Built `opus-expert` on the HP node — a Claude Code wrapper with a CLI (`ask-opus`) and an internal REST API. Supports one-shot queries and named advisory sessions with full thread continuity.
-- **Why** — OpenClaw was banned from the Claude subscription, so this is the workaround that keeps Claude usable on the homelab within the generous Claude subscription limits. Sessions stay persistent, local, and auditable.
+- **Why** — OpenClaw could not use the Claude subscription directly, so this keeps Claude available to the homelab within subscription limits. Sessions stay persistent, local, and auditable.
 
 ### OpenClaw: Ollama cloud delegates for coding, analysis, engineering
 
