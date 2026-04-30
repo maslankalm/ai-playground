@@ -14,6 +14,52 @@ Keep entries focused on *what changed* and *why*. Host-internal paths, ports, an
 
 ---
 
+## 2026-04-30
+
+### Daily recap automation fixed
+
+- **What** — Fixed the daily recap automation after a failed run caused by an editing/tool mismatch. The job now runs in a more isolated mode with narrower tools and clearer append-only behavior.
+- **Why** — Keeps daily homelab notes reliable without letting a tooling error turn a successful local update into a noisy failure report.
+
+---
+
+## 2026-04-29
+
+### Hermes Discord integration hardened
+
+- **What** — Set up Hermes with a Discord integration, then tightened the deployment so it stays limited to its intended chat scope.
+- **Why** — Allows experimenting with Hermes alongside OpenClaw while reducing the chance that it responds in the wrong place.
+
+---
+
+## 2026-04-28
+
+### rtx-i5: refreshed GPU worker validated
+
+- **What** — Validated `rtx-i5` after a GPU/PSU refresh: Docker GPU runtime, Ollama, Vidscribe, local STT, and wake/shutdown control all worked after reboot and power-cycle testing.
+- **Why** — Confirms the local GPU node is usable again for private inference and transcription workloads.
+
+### Paperclip experiment removed
+
+- **What** — Tested Paperclip as a possible agent workflow component, found it unsuitable for the current setup, and removed the experiment cleanly.
+- **Why** — Keeps the homelab from accumulating experimental services that are noisy, unclear, or not ready to integrate.
+
+---
+
+## 2026-04-27
+
+### Rigwarden moved to Raspberry Pi controller
+
+- **What** — Moved Rigwarden from the HP Docker host to a Raspberry Pi colocated with the GPU rigs, then removed the old HP deployment after validating wake/status behavior.
+- **Why** — Puts rig power control on a tiny always-on device near the hardware, reducing the need to keep heavier machines online.
+
+### OpenClaw memory and procedure cleanup
+
+- **What** — Archived historical benchmark docs, compacted long-term OpenClaw memory, and cleaned stale current-state references from active operating docs.
+- **Why** — Keeps the agent operating context smaller, current, and easier to maintain as the homelab evolves.
+
+---
+
 ## 2026-04-26
 
 ### OpenClaw: GPT-5.5-only Leah with lean internal workers
