@@ -14,6 +14,29 @@ Keep entries focused on *what changed* and *why*. Host-internal paths, ports, an
 
 ---
 
+## 2026-05-04
+
+### OpenClaw updated for Discord delivery reliability
+
+- **What** — Updated OpenClaw to the latest minor release to address unreliable Discord final replies, where longer or tool-heavy agent runs often failed to return a final message. Follow-up checks showed explicit Discord announce delivery working across the main lanes, and normal delivery appears healthier after the upgrade.
+- **Why** — Discord is the main control surface for the homelab AI stack, so completed work needs to reliably return to chat instead of disappearing into logs or background state.
+
+### Ollama Cloud subscription discontinued
+
+- **What** — Decided to discontinue the Ollama Cloud subscription after repeated reliability problems, especially frequent `503` errors even on the paid account.
+- **Why** — Worker delegation is only useful when the model backend is dependable; an unreliable paid cloud delegate path adds supervision cost instead of reducing it.
+
+---
+
+## 2026-05-01
+
+### OpenClaw operating memory refreshed
+
+- **What** — Refreshed OpenClaw operating memory and docs to match the current worker model, thinking policy, recap automation, and long-running artifact conventions.
+- **Why** — Keeps the agent control plane easier to operate as the homelab grows.
+
+---
+
 ## 2026-04-30
 
 ### Daily recap automation fixed

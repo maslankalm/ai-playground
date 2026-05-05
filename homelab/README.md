@@ -6,7 +6,7 @@ Kept cost-free where possible (free tiers, self-hosting, local models) so the fo
 
 ## Current state
 
-A Kubernetes cluster on Oracle Cloud drives GitOps workloads. An HP node runs the AI control plane: OpenClaw, led by Leah on GPT-5.5, Hermes as a separate Discord-connected agent experiment, and `opus-expert` as a Claude advisory sidecar. OpenClaw delegates narrow work to internal worker models on Ollama Cloud, picked per lane after benchmarking: GLM 5.1 and MiniMax for coding, DeepSeek V4 Flash / Gemma / Kimi for research, and GPT-5.5 workers for second opinions.
+A Kubernetes cluster on Oracle Cloud drives GitOps workloads. An HP node runs the AI control plane: OpenClaw, led by Leah on GPT-5.5, Hermes as a separate Discord-connected agent experiment, and `opus-expert` as a Claude advisory sidecar. OpenClaw can use internal workers for narrow tasks, with GPT-5.5 workers and `opus-expert` available for second opinions and critique.
 
 Local hardware is used where it adds something the cloud delegates do not. `rtx-i5`, a private GPU rig (i5-9400F / RTX 2080 Ti), serves local inference and local STT workloads on owned hardware. Rigwarden now runs on a Raspberry Pi near the rigs for wake/status control, while Vidscribe turns video sources into reusable transcript artifacts.
 
@@ -18,7 +18,6 @@ flowchart LR
     subgraph Cloud["Cloud"]
         K8S["OCI Kubernetes<br/>GitOps workloads"]
         OPENAI["OpenAI Codex<br/>GPT-5.5"]
-        OLLAMA_CLOUD["Ollama Cloud<br/>worker models"]
         CLAUDE["Claude<br/>opus-expert backend"]
     end
 
@@ -41,7 +40,6 @@ flowchart LR
     USER --> HM
     REPO -->|ArgoCD GitOps| K8S
     OC --> OPENAI
-    OC --> OLLAMA_CLOUD
     OC --> OE
     OC --> SX
     OE --> CLAUDE
@@ -62,7 +60,6 @@ flowchart LR
 | OpenClaw | AI agent platform, Leah/GPT-5.5-led Discord control plane with internal worker delegation | — |
 | Hermes | Separate Discord-connected agent experiment running beside OpenClaw | — |
 | SearXNG | Local web search backend for OpenClaw | — |
-| Ollama cloud delegates | Per-lane workers for OpenClaw — GLM 5.1 leads coding with MiniMax backup; DeepSeek V4 Flash / Gemma / Kimi handle research | [ollama.com](https://ollama.com/) |
 | Raspberry Pi rig controller | Low-power controller near the GPU rigs, running Rigwarden for wake/status | — |
 | rtx-i5 | Private GPU inference rig (i5-9400F / 32 GB / RTX 2080 Ti), Docker with GPU passthrough, LAN-only | — |
 | opus-expert | Claude advisory system on HP, CLI (`ask-opus`) + internal REST API; also consulted by OpenClaw as an expert advisor | — |
