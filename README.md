@@ -1,14 +1,56 @@
 # AI Playground
 
-A growing collection of projects that prove AI-driven development works across many scenarios — from CLI tools to cloud integrations, DevOps automation, and beyond. Each project is built with free-tier services, free API credits, and local models to keep everything accessible and cost-free.
+A working repository for AI-assisted engineering experiments across DevOps, Kubernetes, homelab automation, and LLM-powered tools.
 
-The [homelab/](homelab/) directory is the meta view across these projects — the evolving architecture of the underlying infrastructure plus a changelog of every change, framing the AI learning journey from an infra perspective.
+The goal is simple: build useful systems, keep them cost-conscious, and document how the architecture evolves over time. The [homelab/](homelab/) directory is the meta view — current architecture plus a public-safe changelog of infrastructure changes.
 
-## Built with Claude Code
+## Current architecture
 
-All code in this repository is authored by [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), Anthropic's agentic coding CLI, under human supervision. The human provides architectural direction, defines requirements, and reviews the output — Claude writes the code, configures the tooling, and handles implementation details.
+```mermaid
+flowchart LR
+    USER["User<br/>Discord / CLI"]
+    REPO["ai-playground repo<br/>GitHub"]
 
-There's a decade of hands-on engineering behind the wheel — AI just ships it faster.
+    subgraph Cloud["Cloud"]
+        K8S["OCI Kubernetes<br/>GitOps workloads"]
+        OPENAI["OpenAI Codex<br/>GPT-5.5"]
+        CLAUDE["Claude Code<br/>Opus 4.7"]
+    end
+
+    subgraph HP["HP Docker host"]
+        OC["OpenClaw<br/>AI control plane"]
+        HM["Hermes<br/>backup agent<br/>separate Discord app"]
+        OE["opus-expert<br/>Claude advisory sidecar"]
+        SX["SearXNG<br/>search backend"]
+    end
+
+    subgraph Local["Local hardware"]
+        PI["Raspberry Pi<br/>rig controller"]
+        RW["Rigwarden app<br/>wake/status"]
+        RTX["rtx-i5<br/>RTX 2080 Ti"]
+        VS["Vidscribe app<br/>transcript service"]
+        OLLAMA_LOCAL["Ollama / speech-to-text<br/>local GPU workloads"]
+    end
+
+    USER --> OC
+    USER --> HM
+    REPO -->|ArgoCD GitOps| K8S
+    OC --> OPENAI
+    OC --> OE
+    OC --> SX
+    OE --> CLAUDE
+    PI --> RW
+    RW -->|Wake-on-LAN / status| RTX
+    OC --> VS
+    VS --> OLLAMA_LOCAL
+    OLLAMA_LOCAL --> RTX
+```
+
+## AI-assisted engineering
+
+This repo started with Claude Code, then moved to OpenAI Codex with GPT-5.5 after practical comparison in daily use. Codex is now the main coding and operations assistant. Claude remains available through `opus-expert`, exposed through an OpenAI-compatible REST API and connected to OpenClaw as a model for critical review, second opinions, and deeper critique.
+
+The human part is still the important part: architecture, requirements, tradeoffs, operations, and review. AI makes the implementation loop faster.
 
 ## Projects
 
