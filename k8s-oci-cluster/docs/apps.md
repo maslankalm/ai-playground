@@ -1,20 +1,17 @@
-# Applications
+# Application Layer
 
-Applications deployed via ArgoCD from the `apps/` directory. Adding a new Application manifest and pushing to Git is all that's needed — ArgoCD picks it up automatically.
+Argo CD is configured with an app-of-apps entry pointing at [`../apps/`](../apps/). Adding an Application manifest there and pushing to Git is the intended deployment path: Argo CD picks it up, applies it, self-heals drift, and prunes removed resources.
 
-## Kube-Prometheus-Stack
+## Current Status
 
-Full monitoring and observability stack.
+No long-running application manifests are currently committed in the public repo. The previous kube-prometheus-stack experiment proved the GitOps path, but was removed to keep the OCI Always Free cluster inside a practical resource budget.
 
-| Component | Details |
-|---|---|
-| **Chart** | `kube-prometheus-stack` v82.* |
-| **Namespace** | `monitoring` |
+## Deployment Contract
 
-### Sub-components
+When apps are added, they should follow the same pattern:
 
-- **Prometheus** — metrics collection and storage, 15-day retention on 10Gi persistent volume
-- **Grafana** — dashboards and visualization, with Ingress and TLS via cert-manager
-- **Alertmanager** — alert routing and grouping, 2Gi persistent volume
-- **Node Exporter** — host-level metrics from each worker node
-- **Kube-State-Metrics** — Kubernetes object state metrics (deployments, pods, etc.)
+- Application manifests live under `k8s-oci-cluster/apps`.
+- Runtime secrets are created by Terraform in `platform/`, not stored in Git.
+- Public ingress should stay behind Cloudflare and use cert-manager TLS.
+- Resource requests should be realistic for the ARM free-tier nodes.
+- Anything too heavy for the free tier should move back to the homelab or be removed rather than quietly degrading the cluster.

@@ -2,15 +2,42 @@
 
 Reverse-chronological record of every change to the homelab: cluster updates, new apps, Raspberry Pi work, networking, and AI/learning milestones.
 
-## Format
+---
 
-Each entry is a dated `## YYYY-MM-DD` heading with a short title, followed by:
+## 2026-05-12
 
-- **What** — the change, in one or two sentences.
-- **Why** — the motivation.
-- **Links** — related directories, PRs, or external resources.
+### Local Ollama restored on GPU rigs
 
-Keep entries focused on *what changed* and *why*. Host-internal paths, ports, and other operational specifics belong in runbooks, not here. Include **Links** only when they point somewhere meaningful to a reader (repos, docs, sibling homelab dirs).
+- **What** — Installed and validated Ollama containers on the local GPU rigs with persistent model storage and GPU passthrough. Direct API checks over Tailnet worked after access rules were adjusted.
+- **Why** — Replaces the unreliable Ollama Cloud path with local inference capacity on owned hardware.
+
+---
+
+## 2026-05-11
+
+### Tailscale introduced as private homelab backbone
+
+- **What** — Connected the AI control plane, developer workstation, Raspberry Pi rig controller, and local GPU rigs through Tailscale. Tailnet reachability and remote GPU container access were validated end to end.
+- **Why** — Gives the homelab a cleaner private network layer so the whole lab can be operated securely from anywhere, including while traveling, without exposing those services publicly.
+
+### Local GPU rig fleet rebuilt and validated
+
+- **What** — Rebuilt the local GPU rig setup around two Windows GPU machines, Tailnet Docker access, and GPU container validation from the AI control plane. Reboot behavior and remote Docker/GPU checks were tested end to end.
+- **Why** — Turns the local hardware into a more reliable private inference pool instead of a single ad hoc machine.
+
+### Rigwarden web UI added
+
+- **What** — Added a small web UI to Rigwarden and redeployed it on the Raspberry Pi rig controller. Wake/status checks were validated against both GPU rigs.
+- **Why** — Makes rig power/status control easier to inspect and operate without needing raw API calls.
+
+---
+
+## 2026-05-08
+
+### Hermes updated for Kanban-based multi-agent coordination
+
+- **What** — Updated Hermes to the latest available release and validated the dashboard, gateway, Discord command sync, and local container tooling after the upgrade.
+- **Why** — Makes Hermes a peer operating surface alongside OpenClaw, with its Kanban board used to coordinate multi-agent infrastructure work instead of tracking everything through chat alone.
 
 ---
 

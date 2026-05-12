@@ -1,6 +1,6 @@
-# Platform Components
+# Platform Layer
 
-Core services deployed via Terraform (`platform/`). These provide the shared infrastructure that all applications depend on.
+Core services deployed via Terraform from `platform/`. This layer turns the raw OKE cluster into a small public-facing GitOps platform: ingress, DNS automation, TLS, secrets, and Argo CD.
 
 | Component | Chart | Version | Namespace |
 |---|---|---|---|
@@ -11,11 +11,11 @@ Core services deployed via Terraform (`platform/`). These provide the shared inf
 
 ## NGINX Ingress Controller
 
-Exposes cluster services to external traffic through an OCI free-tier flexible load balancer. Source IPs are restricted to Cloudflare CIDR ranges.
+Exposes cluster services through an OCI flexible load balancer sized for the free-tier setup. Source IPs are restricted to Cloudflare CIDR ranges so public traffic reaches the cluster through the proxied edge instead of directly.
 
 ## Cert-Manager
 
-Automates TLS certificate issuance and renewal from Let's Encrypt using Cloudflare DNS-01 challenges. Provides a `letsencrypt-prod` ClusterIssuer available cluster-wide.
+Automates TLS certificate issuance and renewal from Let's Encrypt using Cloudflare DNS-01 challenges. Provides a `letsencrypt-prod` `ClusterIssuer` available cluster-wide.
 
 ## External-DNS
 
@@ -24,3 +24,7 @@ Watches Ingress resources and automatically creates/updates Cloudflare DNS recor
 ## ArgoCD
 
 Implements GitOps continuous deployment using the app-of-apps pattern. Watches the `apps/` directory and automatically syncs Application manifests to the cluster with self-heal and auto-prune enabled.
+
+## Secrets
+
+Secrets that applications need at runtime belong in Terraform, not public GitOps manifests. The platform layer currently creates the `monitoring` namespace and Grafana admin secret support used by the monitoring experiment.

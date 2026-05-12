@@ -1,16 +1,22 @@
-# Kubernetes on OCI Free Tier
+# Kubernetes on OCI Always Free
 
-## Goal
+Terraform-managed Kubernetes platform built around Oracle Cloud's Always Free tier. The goal is to keep a real GitOps cluster online at near-zero cost while still using production-shaped building blocks: managed Kubernetes, ingress, DNS automation, TLS, and Argo CD.
 
-Run AI workloads on a free Kubernetes cluster using Oracle Cloud Infrastructure's Always Free tier.
+The Terraform code is reusable: with an OCI account, Cloudflare zone, and the documented variables, another operator can use this directory to bring up their own Always Free Kubernetes cluster.
 
-## Background
+## What This Shows
+
+- **Cost-aware cloud architecture** — OKE control plane, ARM worker nodes, and a small OCI load balancer sized for the free-tier envelope.
+- **Terraform separation of concerns** — base cloud infrastructure lives in `infrastructure/`; cluster add-ons and secrets live in `platform/`.
+- **GitOps operating model** — Argo CD is bootstrapped by Terraform and watches the repo for application manifests.
+- **Public-safe secret handling** — application secrets are created by Terraform in the platform layer, not committed into GitOps manifests.
+- **Cloudflare-backed edge** — ingress traffic is restricted to Cloudflare CIDRs, DNS is automated by external-dns, and TLS is issued with cert-manager DNS-01 challenges.
+
+## Architecture
 
 Oracle Cloud's [Always Free tier](https://www.oracle.com/cloud/free/) is one of the most generous cloud offers available for experimenting — especially for compute. The OKE (Oracle Kubernetes Engine) control plane is always free, and the Ampere A1 ARM shapes provide solid resources at no cost.
 
 Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s), rewritten with additional documentation and configuration changes.
-
-## Cluster Setup
 
 - **Engine:** Oracle Kubernetes Engine (OKE) — free managed control plane
 - **Worker nodes:** 2 nodes, each with 2 OCPUs / 12 GB RAM / 100 GB block storage (NVMe SSD)
@@ -19,6 +25,8 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 - **DNS:** external-dns with Cloudflare provider for automatic DNS record management (proxied mode)
 - **TLS:** cert-manager with Let's Encrypt certificates via Cloudflare DNS-01 challenge — enables Cloudflare Full (Strict) TLS mode for end-to-end encryption
 - **GitOps:** Argo CD for continuous deployment from Git
+
+The application layer is intentionally light right now. Heavier monitoring was removed when it stopped fitting the free-tier budget cleanly; the platform still keeps the GitOps path ready for workloads that make sense for the cluster.
 
 See [Prerequisites](docs/prerequisites.md) before running Terraform.
 
