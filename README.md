@@ -12,6 +12,7 @@ flowchart LR
     HOMELAB["homelab<br/>AI operations + local compute"]
     K8S["k8s-oci-cluster<br/>OCI Always Free GitOps"]
     HIDDEN["hidden-jobs<br/>LLM search tooling"]
+    ROUTER["ollama-router<br/>LLM backend routing"]
 
     AGENTS["OpenClaw + Hermes<br/>agent control planes"]
     LAB["Tailscale + GPU rigs<br/>remote-operable lab"]
@@ -19,8 +20,10 @@ flowchart LR
     REPO --> HOMELAB
     REPO --> K8S
     REPO --> HIDDEN
+    REPO --> ROUTER
     HOMELAB --> AGENTS
     HOMELAB --> LAB
+    ROUTER --> LAB
 ```
 
 ## AI-assisted engineering
@@ -36,3 +39,4 @@ The human part is still the important part: architecture, requirements, tradeoff
 | [homelab](homelab/) | Current AI operations architecture, Tailscale-connected GPU rigs, Rigwarden wake/status control, and the public changelog showing how the lab evolved. |
 | [k8s-oci-cluster](k8s-oci-cluster/) | Terraform-managed OCI Always Free Kubernetes cluster with nginx ingress, external-dns, cert-manager, and Argo CD GitOps. |
 | [hidden-jobs](hidden-jobs/) | LLM-assisted search tooling for finding job postings hidden on company career pages and ATS platforms. |
+| [ollama-router](https://github.com/maslankalm/ollama-router) | Standalone OpenAI-compatible FastAPI router for Ollama backends. This repo carries the OCI/Argo CD deployment manifests under `k8s-oci-cluster/apps/ollama-router`; the app code and GHCR image live in the separate public repository. |
