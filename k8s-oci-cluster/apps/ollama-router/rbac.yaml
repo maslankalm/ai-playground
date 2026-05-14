@@ -1,0 +1,31 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ollama-router-tailscale
+  namespace: ollama-router
+  labels:
+    app.kubernetes.io/name: ollama-router
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["tailscale"]
+    verbs: ["get", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ollama-router-tailscale
+  namespace: ollama-router
+  labels:
+    app.kubernetes.io/name: ollama-router
+subjects:
+  - kind: ServiceAccount
+    name: ollama-router
+    namespace: ollama-router
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ollama-router-tailscale

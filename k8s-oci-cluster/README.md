@@ -7,9 +7,9 @@ The Terraform code is reusable: with an OCI account, Cloudflare zone, and the do
 ## What This Shows
 
 - **Cost-aware cloud architecture** — OKE control plane, ARM worker nodes, and a small OCI load balancer sized for the free-tier envelope.
-- **Terraform separation of concerns** — base cloud infrastructure lives in `infrastructure/`; cluster add-ons and secrets live in `platform/`.
+- **Terraform separation of concerns** — base cloud infrastructure lives in `infrastructure/`; cluster add-ons live in `platform/`.
 - **GitOps operating model** — Argo CD is bootstrapped by Terraform and watches the repo for application manifests.
-- **Public-safe secret handling** — application secrets are created by Terraform in the platform layer, not committed into GitOps manifests.
+- **Public-safe secret handling** — platform/core secrets stay in Terraform; app-specific secrets use each app's ignored `config/` files plus committed `.example` templates.
 - **Cloudflare-backed edge** — ingress traffic is restricted to Cloudflare CIDRs, DNS is automated by external-dns, and TLS is issued with cert-manager DNS-01 challenges.
 
 ## Architecture
@@ -26,7 +26,7 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 - **TLS:** cert-manager with Let's Encrypt certificates via Cloudflare DNS-01 challenge — enables Cloudflare Full (Strict) TLS mode for end-to-end encryption
 - **GitOps:** Argo CD for continuous deployment from Git
 
-The application layer is intentionally light right now. Heavier monitoring was removed when it stopped fitting the free-tier budget cleanly; the platform still keeps the GitOps path ready for workloads that make sense for the cluster.
+The application layer is intentionally light right now. The platform keeps the GitOps path ready for workloads that make sense for the cluster without carrying unused monitoring-stack leftovers.
 
 See [Prerequisites](docs/prerequisites.md) before running Terraform.
 
@@ -64,7 +64,7 @@ Deploys the nginx ingress controller (with an OCI free-tier load balancer), exte
 ```bash
 cd platform
 cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars with your domain, email, and all required secrets
+# Edit terraform.tfvars with your domain, email, and required platform secrets
 terraform init
 terraform apply -target=helm_release.cert_manager  # first time only, installs CRDs
 terraform apply
@@ -77,10 +77,10 @@ terraform apply
 
 ArgoCD watches the `apps/` directory and automatically syncs applications to the cluster. Add Application manifests there and push to Git — ArgoCD picks them up, applies them, and prunes removed resources. See [Applications](docs/apps.md) for details.
 
-> [!NOTE]
-> If an application requires secrets, they are pre-created in the platform layer (`platform/secrets.tf`) via Terraform rather than in ArgoCD manifests, since the `apps/` directory is in a public repository.
+Application manifests are managed by Argo CD. If an app needs private runtime config, follow that app's `config/` workflow first: copy the committed `.example` files to same-name local files without the `.example` suffix, fill real values, and apply those ignored local files before syncing the app.
 
 ```bash
-# Applications are managed by Argo CD — no manual kubectl/terraform needed
-# Add manifests to apps/ and push to Git
+# App manifests are managed by Argo CD.
+# App private config is created from each app's ignored config/*.yaml files.
+# Add/review manifests under apps/ and push when ready.
 ```

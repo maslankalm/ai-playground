@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-router
+  namespace: ollama-router
+  labels:
+    app.kubernetes.io/name: ollama-router
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ollama-router
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ollama-router
+    spec:
+      serviceAccountName: ollama-router
+      enableServiceLinks: false
+      containers:
+        - name: ollama-router
+          image: ghcr.io/maslankalm/ollama-router:main
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: OLLAMA_ROUTER_CONFIG_PATH
+              value: /etc/ollama-router/config.yaml
+            - name: OLLAMA_CLOUD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ollama-router-secrets
+                  key: OLLAMA_CLOUD_API_KEY
+          volumeMounts:
+            - name: router-config
+              mountPath: /etc/ollama-router/config.yaml
+              subPath: config.yaml
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+        - name: tailscale
+          image: docker.io/tailscale/tailscale:stable
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: ollama-router-secrets
+                  key: TS_AUTHKEY
+            - name: TS_HOSTNAME
+              value: ollama-router
+            - name: TS_STATE_DIR
+              value: /var/lib/tailscale
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_EXTRA_ARGS
+              value: --accept-dns=false --advertise-tags=tag:k8s
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - name: tailscale-state
+              mountPath: /var/lib/tailscale
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
+      volumes:
+        - name: router-config
+          secret:
+            secretName: ollama-router-config
+            items:
+              - key: config.yaml
+                path: config.yaml
+        - name: tailscale-state
+          emptyDir: {}
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice

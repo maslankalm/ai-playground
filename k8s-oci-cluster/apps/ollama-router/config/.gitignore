@@ -1,0 +1,4 @@
+# Ignore filled local copies; commit only .example templates.
+*
+!*.example
+!.gitignore

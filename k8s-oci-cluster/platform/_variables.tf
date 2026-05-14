@@ -20,11 +20,6 @@ variable "cloudflare_api_token" {
   sensitive   = true
 }
 
-variable "grafana_admin_password" {
-  description = "Admin password for Grafana"
-  type        = string
-  sensitive   = true
-}
 
 variable "git_repo_url" {
   description = "Git repository URL for ArgoCD to watch"

@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ollama-router
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: ollama-router
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/maslankalm/ai-playground.git
+    targetRevision: main
+    path: k8s-oci-cluster/apps/ollama-router
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ollama-router
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,6 +1,6 @@
 # Platform Layer
 
-Core services deployed via Terraform from `platform/`. This layer turns the raw OKE cluster into a small public-facing GitOps platform: ingress, DNS automation, TLS, secrets, and Argo CD.
+Core services deployed via Terraform from `platform/`. This layer turns the raw OKE cluster into a small public-facing GitOps platform: ingress, DNS automation, TLS, platform/core secrets, and Argo CD.
 
 | Component | Chart | Version | Namespace |
 |---|---|---|---|
@@ -27,4 +27,4 @@ Implements GitOps continuous deployment using the app-of-apps pattern. Watches t
 
 ## Secrets
 
-Secrets that applications need at runtime belong in Terraform, not public GitOps manifests. The platform layer currently creates the `monitoring` namespace and Grafana admin secret support used by the monitoring experiment.
+Terraform-managed secrets in `platform/` are only for cluster core components, such as Cloudflare tokens used by cert-manager and external-dns. App-specific runtime secrets do **not** belong in platform Terraform; each Argo CD app should keep committed `.example` templates and ignored real files under its own `config/` directory.

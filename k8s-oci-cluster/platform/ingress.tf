@@ -10,10 +10,10 @@ resource "helm_release" "ingress_nginx" {
     controller = {
       service = {
         annotations = {
-          "oci.oraclecloud.com/load-balancer-type"                            = "lb"
-          "service.beta.kubernetes.io/oci-load-balancer-shape"                = "flexible"
-          "service.beta.kubernetes.io/oci-load-balancer-shape-flex-min"       = "10"
-          "service.beta.kubernetes.io/oci-load-balancer-shape-flex-max"       = "10"
+          "oci.oraclecloud.com/load-balancer-type"                      = "lb"
+          "service.beta.kubernetes.io/oci-load-balancer-shape"          = "flexible"
+          "service.beta.kubernetes.io/oci-load-balancer-shape-flex-min" = "10"
+          "service.beta.kubernetes.io/oci-load-balancer-shape-flex-max" = "10"
         }
         loadBalancerSourceRanges = var.ingress_source_cidrs
       }

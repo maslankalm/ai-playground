@@ -37,4 +37,4 @@ oci os ns get --query data --raw-output
 Each Terraform directory has its own `terraform.tfvars` (gitignored). Copy `terraform.tfvars.example` and fill in the values.
 
 > [!NOTE]
-> The list of platform variables may grow as applications requiring secrets are added. Check `terraform.tfvars.example` for the current set.
+> Platform variables are for cluster core components. Argo CD app runtime secrets should be handled in each app's ignored `config/` files, with committed `.example` templates for the expected shape.
