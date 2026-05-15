@@ -1,4 +1,4 @@
-# AI Playground
+# AI Lab
 
 A working repository for AI-assisted engineering across DevOps, Kubernetes, homelab automation, and LLM-powered tools.
 
@@ -14,7 +14,7 @@ Paste a small Kubernetes manifest and get an AI-assisted security/reliability re
 
 ```mermaid
 flowchart LR
-    REPO["ai-playground"]
+    REPO["ai-lab"]
     HOMELAB["homelab<br/>AI operations + local compute"]
     K8S["k8s-oci-cluster<br/>OCI Always Free GitOps"]
     REVIEWER["k8s-manifest-reviewer<br/>live Kubernetes YAML review"]

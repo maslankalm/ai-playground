@@ -11,4 +11,4 @@ cloudflare_api_token    = "your-cloudflare-api-token-here"
 # ── Optional ──────────────────────────────────────────────────────────
 
 # kubeconfig_path = "~/.kube/k8s-oci-cluster-config"   # defaults to this
-# git_repo_url    = "https://github.com/maslankalm/ai-playground.git"  # defaults to this
+# git_repo_url    = "https://github.com/maslankalm/ai-lab.git"  # defaults to this

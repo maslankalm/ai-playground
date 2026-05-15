@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/maslankalm/ai-playground.git
+    repoURL: https://github.com/maslankalm/ai-lab.git
     targetRevision: main
     path: k8s-oci-cluster/apps/k8s-manifest-reviewer
   destination:

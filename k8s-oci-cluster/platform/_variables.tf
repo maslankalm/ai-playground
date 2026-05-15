@@ -24,7 +24,7 @@ variable "cloudflare_api_token" {
 variable "git_repo_url" {
   description = "Git repository URL for ArgoCD to watch"
   type        = string
-  default     = "https://github.com/maslankalm/ai-playground.git"
+  default     = "https://github.com/maslankalm/ai-lab.git"
 }
 
 variable "ingress_source_cidrs" {
