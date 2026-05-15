@@ -4,6 +4,25 @@ Reverse-chronological record of every change to the homelab: cluster updates, ne
 
 ---
 
+## 2026-05-15
+
+### Kubernetes Manifest Reviewer public demo deployed
+
+- **What** — Deployed the Kubernetes Manifest Reviewer as the first public demo workload on the OCI GitOps cluster. The app is served at <https://k8s-manifest-reviewer.maslanka.io> through Cloudflare-proxied nginx Ingress with cert-manager TLS, a `16k` ingress body cap, and Argo CD app-of-apps management.
+- **Why** — Turns the AI Playground infrastructure into a usable portfolio demo: a real Kubernetes app running on the public cluster, using local RTX 2080 Ti inference through `ollama-router` with Ollama Cloud free-tier fallback.
+
+### Ollama router connected cluster apps to local GPU inference
+
+- **What** — Added `ollama-router` as an internal-only `ClusterIP` service on the OCI cluster, with a Tailscale sidecar reaching the local RTX 2080 Ti Ollama backend and Ollama Cloud free-tier fallback. The router stays deployment-agnostic; private endpoints and API keys live in app-local ignored config/Secrets.
+- **Why** — Keeps public apps simple while proving the important architecture: cloud-hosted Kubernetes can use owned local GPU hardware over the private Tailnet without exposing inference services to the public internet.
+
+### AI Playground public repo cleaned around the live demo
+
+- **What** — Removed the older `hidden-jobs` experiment from `ai-playground`, promoted the live Kubernetes Manifest Reviewer link to the top-level README, and documented both GitOps apps under `k8s-oci-cluster/apps/`.
+- **Why** — Keeps the repository focused on the strongest milestone: GitOps infrastructure, homelab-backed inference, and a running public AI/Kubernetes demo.
+
+---
+
 ## 2026-05-12
 
 ### Local Ollama restored on GPU rigs

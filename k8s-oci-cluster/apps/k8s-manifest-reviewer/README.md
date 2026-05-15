@@ -4,11 +4,13 @@ Public demo deployment for [`ghcr.io/maslankalm/k8s-manifest-reviewer:main`](htt
 
 Live app: <https://k8s-manifest-reviewer.maslanka.io>
 
-The app reviews small Kubernetes YAML manifests and calls the in-cluster `ollama-router` service:
+The app reviews small Kubernetes YAML manifests with `ministral-3:8b` and calls the in-cluster `ollama-router` service:
 
 ```text
-k8s-manifest-reviewer -> ollama-router.ollama-router.svc.cluster.local:8080 -> local RTX 2080 Ti / Ollama Cloud fallback
+k8s-manifest-reviewer -> ollama-router -> local RTX 2080 Ti / Ollama Cloud free-tier fallback
 ```
+
+Related docs: [`../README.md`](../README.md) lists all GitOps apps, and [`../../../homelab/README.md`](../../../homelab/README.md) explains the Tailnet/local GPU side of the setup.
 
 ## Manifests
 
@@ -23,7 +25,7 @@ The Ingress sets `nginx.ingress.kubernetes.io/proxy-body-size: "16k"` so oversiz
 
 The deployment uses only non-secret environment variables:
 
-- `OLLAMA_ROUTER_URL=http://ollama-router.ollama-router.svc.cluster.local:8080`
+- `OLLAMA_ROUTER_URL` points at the internal `ollama-router` Kubernetes Service; see `deployment.yaml` for the exact cluster DNS value.
 - `OLLAMA_MODEL=ministral-3:8b`
 - `LLM_REVIEW_ATTEMPTS=3`
 - `RATE_LIMIT_REQUESTS=3`
