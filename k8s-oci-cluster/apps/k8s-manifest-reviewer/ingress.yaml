@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-manifest-reviewer
+  namespace: k8s-manifest-reviewer
+  labels:
+    app.kubernetes.io/name: k8s-manifest-reviewer
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "16k"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - k8s-manifest-reviewer.maslanka.io
+      secretName: k8s-manifest-reviewer-tls
+  rules:
+    - host: k8s-manifest-reviewer.maslanka.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: k8s-manifest-reviewer
+                port:
+                  name: http

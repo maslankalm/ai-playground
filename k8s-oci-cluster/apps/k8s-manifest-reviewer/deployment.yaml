@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-manifest-reviewer
+  namespace: k8s-manifest-reviewer
+  labels:
+    app.kubernetes.io/name: k8s-manifest-reviewer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: k8s-manifest-reviewer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: k8s-manifest-reviewer
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: app
+          image: ghcr.io/maslankalm/k8s-manifest-reviewer:main
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: OLLAMA_ROUTER_URL
+              value: http://ollama-router.ollama-router.svc.cluster.local:8080
+            - name: OLLAMA_MODEL
+              value: ministral-3:8b
+            - name: REQUEST_TIMEOUT_SECONDS
+              value: "90"
+            - name: LLM_REVIEW_ATTEMPTS
+              value: "3"
+            - name: RATE_LIMIT_ENABLED
+              value: "true"
+            - name: RATE_LIMIT_REQUESTS
+              value: "3"
+            - name: RATE_LIMIT_WINDOW_SECONDS
+              value: "300"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 384Mi

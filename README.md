@@ -40,3 +40,4 @@ The human part is still the important part: architecture, requirements, tradeoff
 | [k8s-oci-cluster](k8s-oci-cluster/) | Terraform-managed OCI Always Free Kubernetes cluster with nginx ingress, external-dns, cert-manager, and Argo CD GitOps. |
 | [hidden-jobs](hidden-jobs/) | LLM-assisted search tooling for finding job postings hidden on company career pages and ATS platforms. |
 | [ollama-router](https://github.com/maslankalm/ollama-router) | Standalone OpenAI-compatible FastAPI router for Ollama backends. This repo carries the OCI/Argo CD deployment manifests under `k8s-oci-cluster/apps/ollama-router`; the app code and GHCR image live in the separate public repository. |
+| [k8s-manifest-reviewer](https://github.com/maslankalm/k8s-manifest-reviewer) | Public demo app that reviews Kubernetes YAML with local RTX 2080 Ti inference and Ollama Cloud fallback through `ollama-router`. Deployment manifests live under `k8s-oci-cluster/apps/k8s-manifest-reviewer`. |

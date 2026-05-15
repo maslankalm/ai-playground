@@ -4,7 +4,9 @@ Argo CD is configured with an app-of-apps entry pointing at [`../apps/`](../apps
 
 ## Current Status
 
-`ollama-router` is prepared as the first internal application workload. It is intentionally `ClusterIP`-only: no public ingress, no load balancer, and no router auth in front of it. Backend endpoints and API/auth keys are supplied by private Kubernetes Secrets created from ignored app-local `config/` files, not public GitOps files.
+`ollama-router` is the internal inference gateway. It is intentionally `ClusterIP`-only: no public ingress, no load balancer, and no router auth in front of it. Backend endpoints and API/auth keys are supplied by private Kubernetes Secrets created from ignored app-local `config/` files, not public GitOps files.
+
+`k8s-manifest-reviewer` is the first public demo workload. It exposes a Cloudflare-proxied Ingress at `k8s-manifest-reviewer.maslanka.io`, calls `ollama-router` through the in-cluster service DNS name, and sets `nginx.ingress.kubernetes.io/proxy-body-size: "16k"` so oversized manifests are rejected before they reach the FastAPI form parser.
 
 No monitoring stack is currently managed here; app manifests should stay lightweight and explicit.
 

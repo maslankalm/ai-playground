@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-manifest-reviewer
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: k8s-manifest-reviewer
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/maslankalm/ai-playground.git
+    targetRevision: main
+    path: k8s-oci-cluster/apps/k8s-manifest-reviewer
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: k8s-manifest-reviewer
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
